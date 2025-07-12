@@ -13,8 +13,1513 @@
     />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
-</head>
-<body>
     
+    <script>
+      function getCssVariable(variableName) {
+        return getComputedStyle(document.documentElement)
+          .getPropertyValue(variableName)
+          .trim();
+      }
+
+      function hexToRgb(hex) {
+        // Remove the hash if present
+        hex = hex.replace(/^#/, "");
+
+        // Parse the hex values
+        let r, g, b;
+        if (hex.length === 3) {
+          r = parseInt(hex.charAt(0) + hex.charAt(0), 16);
+          g = parseInt(hex.charAt(1) + hex.charAt(1), 16);
+          b = parseInt(hex.charAt(2) + hex.charAt(2), 16);
+        } else {
+          r = parseInt(hex.substring(0, 2), 16);
+          g = parseInt(hex.substring(2, 4), 16);
+          b = parseInt(hex.substring(4, 6), 16);
+        }
+
+        return `${r}, ${g}, ${b}`;
+      }
+
+      window.addEventListener("DOMContentLoaded", () => {
+        // Convert HEX colors to RGB for CSS variables
+        const bgSecondary = getCssVariable("--bg-secondary");
+        const ctaPrimary = getCssVariable("--cta-primary");
+        const accentPrimary = getCssVariable("--accent-primary");
+
+        // Try to convert if they look like hex colors
+        if (bgSecondary.startsWith("#")) {
+          document.documentElement.style.setProperty(
+            "--bg-secondary-rgb",
+            hexToRgb(bgSecondary)
+          );
+        }
+
+        if (ctaPrimary.startsWith("#")) {
+          document.documentElement.style.setProperty(
+            "--cta-primary-rgb",
+            hexToRgb(ctaPrimary)
+          );
+        }
+
+        if (accentPrimary.startsWith("#")) {
+          document.documentElement.style.setProperty(
+            "--accent-primary-rgb",
+            hexToRgb(accentPrimary)
+          );
+        }
+      });
+    </script>
+     <!-- SweetAlert2 CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+ <body class="min-h-screen flex flex-col" data-theme="light">
+   
+    <header
+      class="fixed w-full z-50 transition-all duration-300 navbar-modern"
+      id="navbar"
+    >
+      <div class="container mx-auto px-6">
+        <div class="flex items-center justify-between h-16">
+          <a href="#" class="navbar-logo">
+            <span class="navbar-logo-icon">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="lucide lucide-chef-hat-icon lucide-chef-hat"
+              >
+                <path
+                  d="M17 21a1 1 0 0 0 1-1v-5.35c0-.457.316-.844.727-1.041a4 4 0 0 0-2.134-7.589 5 5 0 0 0-9.186 0 4 4 0 0 0-2.134 7.588c.411.198.727.585.727 1.041V20a1 1 0 0 0 1 1Z"
+                />
+                <path d="M6 17h12" />
+              </svg>
+            </span>
+            <span class="text-xl font-semibold">Artisan Kitchen</span>
+          </a>
+
+          <!-- Mobile menu button -->
+          <button id="menu-toggle" class="mobile-menu-btn md:hidden">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="lucide lucide-align-justify-icon lucide-align-justify"
+            >
+              <path d="M3 12h18" />
+              <path d="M3 18h18" />
+              <path d="M3 6h18" />
+            </svg>
+          </button>
+
+          <!-- Desktop Navigation -->
+          <div class="hidden md:flex items-center space-x-1">
+            <a href="#home" class="nav-link-modern active">Home</a>
+            <a href="#recipes" class="nav-link-modern">Recipes</a>
+            <a href="#about" class="nav-link-modern">About</a>
+            <a href="#contact" class="nav-link-modern">Contact</a>
+
+            <button id="theme-toggle" class="theme-toggle-btn ml-4">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="lucide lucide-sun-icon lucide-sun"
+              >
+                <circle cx="12" cy="12" r="4" />
+                <path d="M12 2v2" />
+                <path d="M12 20v2" />
+                <path d="m4.93 4.93 1.41 1.41" />
+                <path d="m17.66 17.66 1.41 1.41" />
+                <path d="M2 12h2" />
+                <path d="M20 12h2" />
+                <path d="m6.34 17.66-1.41 1.41" />
+                <path d="m19.07 4.93-1.41 1.41" />
+              </svg>
+
+              <span class="sr-only">Toggle Theme</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mobile Navigation -->
+      <div
+        id="nav-menu"
+        class="mobile-menu max-h-0 overflow-hidden md:hidden w-full absolute left-0 transition-all duration-300 ease-in-out opacity-0 pointer-events-none"
+      >
+        <div class="flex flex-col space-y-4 pt-2 px-6">
+          <a href="#home" class="nav-link-modern">Home</a>
+          <a href="#recipes" class="nav-link-modern">Recipes</a>
+          <a href="#about" class="nav-link-modern">About</a>
+          <a href="#contact" class="nav-link-modern">Contact</a>
+
+          <div class="flex justify-center pt-2 pb-4">
+            <button id="mobile-theme-toggle" class="theme-toggle-btn">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="lucide lucide-sun-icon lucide-sun"
+              >
+                <circle cx="12" cy="12" r="4" />
+                <path d="M12 2v2" />
+                <path d="M12 20v2" />
+                <path d="m4.93 4.93 1.41 1.41" />
+                <path d="m17.66 17.66 1.41 1.41" />
+                <path d="M2 12h2" />
+                <path d="M20 12h2" />
+                <path d="m6.34 17.66-1.41 1.41" />
+                <path d="m19.07 4.93-1.41 1.41" />
+              </svg>
+              <span class="sr-only">Toggle Theme</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="flex-grow pt-12">
+
+      <section id="home" class="hero-section relative overflow-hidden">
+        <div
+          class="container mx-auto px-6 py-20 relative z-10 flex flex-col lg:flex-row items-center"
+        >
+          <div class="w-full lg:w-1/2 mb-12 lg:mb-0">
+            <h2 class="text-5xl md:text-6xl font-bold leading-tight mb-6">
+              Culinary
+              <span class="text-[var(--cta-primary)]">Artistry</span> for Your
+              Kitchen
+            </h2>
+            <p class="text-lg text-[var(--text-secondary)] mb-8">
+              Discover elegant, timeless recipes crafted with passion and modern
+              techniques. Elevate your culinary journey with our chef-inspired
+              creations.
+            </p>
+            <div
+              class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4"
+            >
+              <a
+                href="#recipes"
+                class="gradient-btn text-white font-medium px-8 py-4 rounded-full shadow-lg text-center"
+              >
+                Explore Recipes
+              </a>
+              <a
+                href="#about"
+                class="bg-[var(--bg-secondary)] text-[var(--text-primary)] font-medium px-8 py-4 rounded-full shadow-md hover:shadow-lg transition-shadow text-center border border-[rgba(var(--accent-primary-rgb),0.1)]"
+              >
+                Our Story
+              </a>
+            </div>
+          </div>
+          <div
+            class="w-full lg:w-1/2 flex justify-center lg:justify-end relative"
+          >
+            <div class="relative">
+              <!-- Main circular image -->
+              <div
+                class="w-64 h-64 md:w-80 md:h-80 circular-img shadow-xl rounded-full"
+              >
+                <img loading="lazy"
+                  src="https://images.unsplash.com/photo-1551218372-a8789b81b253?auto=format&fit=crop&q=80"
+                  alt="Featured dish"
+                  class="w-full h-full object-cover rounded-full"
+                />
+              </div>
+
+              <!-- Smaller floating images -->
+              <div
+                class="absolute -top-6 -left-6 w-24 h-24 circular-img shadow-lg animate-float-slow rounded-full"
+              >
+                <img loading="lazy"
+                  src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&q=80"
+                  alt="Vegetables"
+                  class="w-full h-full object-cover rounded-full"
+                />
+              </div>
+              <div
+                class="absolute top-1/2 -right-8 w-32 h-32 circular-img shadow-lg animate-float rounded-full"
+              >
+                <img loading="lazy"
+                  src="https://images.unsplash.com/photo-1559925393-8be0ec4767c8?auto=format&fit=crop&q=80"
+                  alt="Dessert"
+                  class="w-full h-full object-cover rounded-full"
+                />
+              </div>
+              <div
+                class="absolute -bottom-4 left-10 w-28 h-28 circular-img shadow-lg animate-float-reverse rounded-full"
+              >
+                <img loading="lazy"
+                  src="https://images.unsplash.com/photo-1563379926898-05f4575a45d8?auto=format&fit=crop&q=80"
+                  alt="Spices"
+                  class="w-full h-full object-cover rounded-full"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SVG Blob Decoration -->
+        <svg
+          class="absolute top-0 right-0 h-full w-1/2 text-[var(--accent-secondary)] opacity-20"
+          viewBox="0 0 200 200"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            fill="currentColor"
+            d="M37.7,-64.7C47.9,-56.3,54.5,-43.9,63.2,-31.1C71.9,-18.3,82.6,-5,81.5,7.2C80.5,19.4,67.8,30.4,56.3,40.6C44.8,50.8,34.7,60.3,22.7,66.1C10.7,71.8,-3.3,73.8,-17.8,71.5C-32.2,69.2,-47,62.7,-54.3,51.5C-61.5,40.3,-61,24.5,-63.7,9.3C-66.4,-5.9,-72.4,-20.5,-69.2,-32.4C-66,-44.2,-53.6,-53.4,-40.8,-60.4C-28,-67.5,-14,-72.3,0.3,-72.8C14.6,-73.4,27.5,-73.1,37.7,-64.7Z"
+            transform="translate(100 100)"
+          />
+        </svg>
+      </section>
+
+      <section id="recipes" class="py-24 bg-[var(--bg-secondary)]">
+        <div class="container mx-auto px-6">
+          <div class="text-center mb-16">
+            <h2 class="section-title text-4xl font-bold mb-4 fade-in">Signature Recipes</h2>
+            <p class="text-[var(--text-secondary)] max-w-2xl mx-auto fade-in">
+              Explore our chef-crafted recipes designed to inspire and delight your culinary adventures.
+            </p>
+          </div>
+          <div class="flex flex-wrap justify-center gap-4 mb-10">
+            <button class="filter-btn active" data-filter="all" aria-label="Show all recipes" tabindex="0">All</button>
+            <button class="filter-btn" data-filter="italian" aria-label="Filter by Italian recipes" tabindex="0">Italian</button>
+            <button class="filter-btn" data-filter="seafood" aria-label="Filter by Seafood recipes" tabindex="0">Seafood</button>
+            <button class="filter-btn" data-filter="dessert" aria-label="Filter by Dessert recipes" tabindex="0">Dessert</button>
+            <button class="filter-btn" data-filter="poultry" aria-label="Filter by Poultry recipes" tabindex="0">Poultry</button>
+            <button class="filter-btn" data-filter="salad" aria-label="Filter by Salad recipes" tabindex="0">Salad</button>
+            <button class="filter-btn" data-filter="breakfast" aria-label="Filter by Breakfast recipes" tabindex="0">Breakfast</button>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10" role="region" aria-live="polite">
+            <div class="recipe-card" data-category="italian" data-animation="scroll" data-recipe-id="truffle-risotto">
+              <div class="recipe-image-container">
+                <img loading="lazy" src="https://images.unsplash.com/photo-1476124369491-e7addf5db371?auto=format&fit=crop&q=80" alt="Truffle Risotto" class="recipe-image w-full h-56 object-cover" />
+                <div class="absolute top-3 left-3 flex space-x-2">
+                  <span class="recipe-tag">Italian</span>
+                  <span class="recipe-tag">30 min</span>
+                </div>
+                <button class="favorite-toggle" data-recipe="truffle-risotto" aria-label="Add Truffle Risotto to favorites" tabindex="0">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--text-primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
+                  </svg>
+                </button>
+                <button class="add-to-cart absolute top-3 right-12 p-2 bg-[var(--bg-accent)] rounded-full shadow-md hover:bg-[var(--cta-primary)] hover:text-white transition-all" data-recipe-id="truffle-risotto" aria-label="Add Truffle Risotto to cart" tabindex="0">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10" />
+                    <path d="M12 8v8" />
+                    <path d="M8 12h8" />
+                  </svg>
+                </button>
+              </div>
+              <div class="p-6">
+                <h3 class="text-2xl font-medium text-[var(--text-primary)]">Truffle Risotto</h3>
+                <p class="text-[var(--cta-primary)] font-semibold mt-1">$12.99</p>
+                <p class="text-[var(--text-secondary)] mt-2">
+                  A creamy indulgence with truffle essence, perfect for an elegant dinner.
+                </p>
+                <div class="recipe-details mt-4 text-sm border-t border-[rgba(var(--accent-primary-rgb),0.1)]">
+                  <p class="mb-2 pt-2"><span class="font-semibold">Difficulty:</span> Medium</p>
+                  <div>
+                    <h4 class="font-semibold mb-2">Ingredients:</h4>
+                    <ul class="space-y-1">
+                      <li class="flex items-center"><span class="inline-block w-2 h-2 rounded-full bg-[var(--accent-secondary)] mr-2"></span>1 cup Arborio rice</li>
+                      <li class="flex items-center"><span class="inline-block w-2 h-2 rounded-full bg-[var(--accent-secondary)] mr-2"></span>4 cups chicken stock</li>
+                      <li class="flex items-center"><span class="inline-block w-2 h-2 rounded-full bg-[var(--accent-secondary)] mr-2"></span>1/2 cup Parmesan cheese</li>
+                      <li class="flex items-center"><span class="inline-block w-2 h-2 rounded-full bg-[var(--accent-secondary)] mr-2"></span>2 tbsp truffle oil</li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="mt-6">
+                  <a href="#" class="view-recipe inline-flex items-center font-medium text-[var(--cta-primary)] hover:text-[var(--cta-hover)] transition-colors" data-recipe-id="truffle-risotto">
+                    View Recipe
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                  </a>
+                </div>
+              </div>
+            </div>
+            <div class="recipe-card" data-category="seafood" data-animation="scroll" data-recipe-id="seared-salmon">
+              <div class="recipe-image-container">
+                <img loading="lazy" src="https://images.unsplash.com/photo-1467003909585-2f8a72700288?auto=format&fit=crop&q=80" alt="Seared Salmon" class="recipe-image w-full h-56 object-cover" />
+                <div class="absolute top-3 left-3 flex space-x-2">
+                  <span class="recipe-tag">Seafood</span>
+                  <span class="recipe-tag">15 min</span>
+                </div>
+                <button class="favorite-toggle" data-recipe="seared-salmon" aria-label="Add Seared Salmon to favorites" tabindex="0">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--text-primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
+                  </svg>
+                </button>
+                <button class="add-to-cart absolute top-3 right-12 p-2 bg-[var(--bg-accent)] rounded-full shadow-md hover:bg-[var(--cta-primary)] hover:text-white transition-all" data-recipe-id="seared-salmon" aria-label="Add Seared Salmon to cart" tabindex="0">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10" />
+                    <path d="M12 8v8" />
+                    <path d="M8 12h8" />
+                  </svg>
+                </button>
+              </div>
+              <div class="p-6">
+                <h3 class="text-2xl font-medium text-[var(--text-primary)]">Seared Salmon</h3>
+                <p class="text-[var(--cta-primary)] font-semibold mt-1">$9.99</p>
+                <p class="text-[var(--text-secondary)] mt-2">
+                  Crisp outside, tender inside with a delicate flavor profile.
+                </p>
+                <div class="recipe-details mt-4 text-sm border-t border-[rgba(var(--accent-primary-rgb),0.1)]">
+                  <p class="mb-2 pt-2"><span class="font-semibold">Difficulty:</span> Easy</p>
+                  <div>
+                    <h4 class="font-semibold mb-2">Ingredients:</h4>
+                    <ul class="space-y-1">
+                      <li class="flex items-center"><span class="inline-block w-2 h-2 rounded-full bg-[var(--accent-secondary)] mr-2"></span>2 salmon fillets</li>
+                      <li class="flex items-center"><span class="inline-block w-2 h-2 rounded-full bg-[var(--accent-secondary)] mr-2"></span>1 tbsp olive oil</li>
+                      <li class="flex items-center"><span class="inline-block w-2 h-2 rounded-full bg-[var(--accent-secondary)] mr-2"></span>1 tsp lemon zest</li>
+                      <li class="flex items-center"><span class="inline-block w-2 h-2 rounded-full bg-[var(--accent-secondary)] mr-2"></span>Fresh herbs</li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="mt-6">
+                  <a href="#" class="view-recipe inline-flex items-center font-medium text-[var(--cta-primary)] hover:text-[var(--cta-hover)] transition-colors" data-recipe-id="seared-salmon">
+                    View Recipe
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                  </a>
+                </div>
+              </div>
+            </div>
+            <div class="recipe-card" data-category="dessert" data-animation="scroll" data-recipe-id="chocolate-souffle">
+              <div class="recipe-image-container">
+                <img loading="lazy" src="https://images.unsplash.com/photo-1528207776546-365bb710ee93?auto=format&fit=crop&q=80" alt="Chocolate Soufflé" class="recipe-image w-full h-56 object-cover" />
+                <div class="absolute top-3 left-3 flex space-x-2">
+                  <span class="recipe-tag">Dessert</span>
+                  <span class="recipe-tag">25 min</span>
+                </div>
+                <button class="favorite-toggle" data-recipe="chocolate-souffle" aria-label="Add Chocolate Soufflé to favorites" tabindex="0">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--text-primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
+                  </svg>
+                </button>
+                <button class="add-to-cart absolute top-3 right-12 p-2 bg-[var(--bg-accent)] rounded-full shadow-md hover:bg-[var(--cta-primary)] hover:text-white transition-all" data-recipe-id="chocolate-souffle" aria-label="Add Chocolate Soufflé to cart" tabindex="0">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10" />
+                    <path d="M12 8v8" />
+                    <path d="M8 12h8" />
+                  </svg>
+                </button>
+              </div>
+              <div class="p-6">
+                <h3 class="text-2xl font-medium text-[var(--text-primary)]">Chocolate Soufflé</h3>
+                <p class="text-[var(--cta-primary)] font-semibold mt-1">$7.99</p>
+                <p class="text-[var(--text-secondary)] mt-2">
+                  Light, rich, and airy dessert that melts in your mouth.
+                </p>
+                <div class="recipe-details mt-4 text-sm border-t border-[rgba(var(--accent-primary-rgb),0.1)]">
+                  <p class="mb-2 pt-2"><span class="font-semibold">Difficulty:</span> Hard</p>
+                  <div>
+                    <h4 class="font-semibold mb-2">Ingredients:</h4>
+                    <ul class="space-y-1">
+                      <li class="flex items-center"><span class="inline-block w-2 h-2 rounded-full bg-[var(--accent-secondary)] mr-2"></span>100g dark chocolate</li>
+                      <li class="flex items-center"><span class="inline-block w-2 h-2 rounded-full bg-[var(--accent-secondary)] mr-2"></span>2 large eggs</li>
+                      <li class="flex items-center"><span class="inline-block w-2 h-2 rounded-full bg-[var(--accent-secondary)] mr-2"></span>1/4 cup sugar</li>
+                      <li class="flex items-center"><span class="inline-block w-2 h-2 rounded-full bg-[var(--accent-secondary)] mr-2"></span>1 tsp vanilla</li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="mt-6">
+                  <a href="#" class="view-recipe inline-flex items-center font-medium text-[var(--cta-primary)] hover:text-[var(--cta-hover)] transition-colors" data-recipe-id="chocolate-souffle">
+                    View Recipe
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                  </a>
+                </div>
+              </div>
+            </div>
+            <div class="recipe-card" data-category="poultry" data-animation="scroll" data-recipe-id="herb-roast-chicken">
+              <div class="recipe-image-container">
+                <img loading="lazy" src="https://images.unsplash.com/photo-1603105037880-880cd4edfb0d?auto=format&fit=crop&q=80" alt="Herb Roast Chicken" class="recipe-image w-full h-56 object-cover" />
+                <div class="absolute top-3 left-3 flex space-x-2">
+                  <span class="recipe-tag">Poultry</span>
+                  <span class="recipe-tag">75 min</span>
+                </div>
+                <button class="favorite-toggle" data-recipe="herb-roast-chicken" aria-label="Add Herb Roast Chicken to favorites" tabindex="0">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--text-primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
+                  </svg>
+                </button>
+                <button class="add-to-cart absolute top-3 right-12 p-2 bg-[var(--bg-accent)] rounded-full shadow-md hover:bg-[var(--cta-primary)] hover:text-white transition-all" data-recipe-id="herb-roast-chicken" aria-label="Add Herb Roast Chicken to cart" tabindex="0">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10" />
+                    <path d="M12 8v8" />
+                    <path d="M8 12h8" />
+                  </svg>
+                </button>
+              </div>
+              <div class="p-6">
+                <h3 class="text-2xl font-medium text-[var(--text-primary)]">Herb Roast Chicken</h3>
+                <p class="text-[var(--cta-primary)] font-semibold mt-1">$14.99</p>
+                <p class="text-[var(--text-secondary)] mt-2">
+                  Golden and fragrant, a perfect centerpiece for any dinner table.
+                </p>
+                <div class="recipe-details mt-4 text-sm border-t border-[rgba(var(--accent-primary-rgb),0.1)]">
+                  <p class="mb-2 pt-2"><span class="font-semibold">Difficulty:</span> Medium</p>
+                  <div>
+                    <h4 class="font-semibold mb-2">Ingredients:</h4>
+                    <ul class="space-y-1">
+                      <li class="flex items-center"><span class="inline-block w-2 h-2 rounded-full bg-[var(--accent-secondary)] mr-2"></span>1 whole chicken</li>
+                      <li class="flex items-center"><span class="inline-block w-2 h-2 rounded-full bg-[var(--accent-secondary)] mr-2"></span>2 tbsp olive oil</li>
+                      <li class="flex items-center"><span class="inline-block w-2 h-2 rounded-full bg-[var(--accent-secondary)] mr-2"></span>Fresh herbs</li>
+                      <li class="flex items-center"><span class="inline-block w-2 h-2 rounded-full bg-[var(--accent-secondary)] mr-2"></span>2 garlic cloves</li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="mt-6">
+                  <a href="#" class="view-recipe inline-flex items-center font-medium text-[var(--cta-primary)] hover:text-[var(--cta-hover)] transition-colors" data-recipe-id="herb-roast-chicken">
+                    View Recipe
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                  </a>
+                </div>
+              </div>
+            </div>
+            <div class="recipe-card" data-category="salad" data-animation="scroll" data-recipe-id="caprese-salad">
+              <div class="recipe-image-container">
+                <img loading="lazy" src="https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&q=80" alt="Caprese Salad" class="recipe-image w-full h-56 object-cover" />
+                <div class="absolute top-3 left-3 flex space-x-2">
+                  <span class="recipe-tag">Salad</span>
+                  <span class="recipe-tag">10 min</span>
+                </div>
+                <button class="favorite-toggle" data-recipe="caprese-salad" aria-label="Add Caprese Salad to favorites" tabindex="0">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--text-primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
+                  </svg>
+                </button>
+                <button class="add-to-cart absolute top-3 right-12 p-2 bg-[var(--bg-accent)] rounded-full shadow-md hover:bg-[var(--cta-primary)] hover:text-white transition-all" data-recipe-id="caprese-salad" aria-label="Add Caprese Salad to cart" tabindex="0">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10" />
+                    <path d="M12 8v8" />
+                    <path d="M8 12h8" />
+                  </svg>
+                </button>
+              </div>
+              <div class="p-6">
+                <h3 class="text-2xl font-medium text-[var(--text-primary)]">Caprese Salad</h3>
+                <p class="text-[var(--cta-primary)] font-semibold mt-1">$6.99</p>
+                <p class="text-[var(--text-secondary)] mt-2">
+                  Fresh, vibrant, and colorful - the essence of Mediterranean cuisine.
+                </p>
+                <div class="recipe-details mt-4 text-sm border-t border-[rgba(var(--accent-primary-rgb),0.1)]">
+                  <p class="mb-2 pt-2"><span class="font-semibold">Difficulty:</span> Easy</p>
+                  <div>
+                    <h4 class="font-semibold mb-2">Ingredients:</h4>
+                    <ul class="space-y-1">
+                      <li class="flex items-center"><span class="inline-block w-2 h-2 rounded-full bg-[var(--accent-secondary)] mr-2"></span>2 large tomatoes</li>
+                      <li class="flex items-center"><span class="inline-block w-2 h-2 rounded-full bg-[var(--accent-secondary)] mr-2"></span>Fresh mozzarella</li>
+                      <li class="flex items-center"><span class="inline-block w-2 h-2 rounded-full bg-[var(--accent-secondary)] mr-2"></span>Fresh basil leaves</li>
+                      <li class="flex items-center"><span class="inline-block w-2 h-2 rounded-full bg-[var(--accent-secondary)] mr-2"></span>Balsamic glaze</li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="mt-6">
+                  <a href="#" class="view-recipe inline-flex items-center font-medium text-[var(--cta-primary)] hover:text-[var(--cta-hover)] transition-colors" data-recipe-id="caprese-salad">
+                    View Recipe
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                  </a>
+                </div>
+              </div>
+            </div>
+            <div class="recipe-card" data-category="breakfast" data-animation="scroll" data-recipe-id="lemon-ricotta-pancakes">
+              <div class="recipe-image-container">
+                <img loading="lazy" src="https://www.abakingjourney.com/wp-content/uploads/2021/01/Lemon-Ricotta-Cake-Feature.jpg" alt="Lemon Ricotta Pancakes" class="recipe-image w-full h-56 object-cover" />
+                <div class="absolute top-3 left-3 flex space-x-2">
+                  <span class="recipe-tag">Breakfast</span>
+                  <span class="recipe-tag">20 min</span>
+                </div>
+                <button class="favorite-toggle" data-recipe="lemon-ricotta-pancakes" aria-label="Add Lemon Ricotta Pancakes to favorites" tabindex="0">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--text-primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
+                  </svg>
+                </button>
+                <button class="add-to-cart absolute top-3 right-12 p-2 bg-[var(--bg-accent)] rounded-full shadow-md hover:bg-[var(--cta-primary)] hover:text-white transition-all" data-recipe-id="lemon-ricotta-pancakes" aria-label="Add Lemon Ricotta Pancakes to cart" tabindex="0">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10" />
+                    <path d="M12 8v8" />
+                    <path d="M8 12h8" />
+                  </svg>
+                </button>
+              </div>
+              <div class="p-6">
+                <h3 class="text-2xl font-medium text-[var(--text-primary)]">Lemon Ricotta Pancakes</h3>
+                <p class="text-[var(--cta-primary)] font-semibold mt-1">$8.99</p>
+                <p class="text-[var(--text-secondary)] mt-2">
+                  Fluffy with a citrus twist, perfect for a luxurious breakfast.
+                </p>
+                <div class="recipe-details mt-4 text-sm border-t border-[rgba(var(--accent-primary-rgb),0.1)]">
+                  <p class="mb-2 pt-2"><span class="font-semibold">Difficulty:</span> Easy</p>
+                  <div>
+                    <h4 class="font-semibold mb-2">Ingredients:</h4>
+                    <ul class="space-y-1">
+                      <li class="flex items-center"><span class="inline-block w-2 h-2 rounded-full bg-[var(--accent-secondary)] mr-2"></span>1 cup ricotta cheese</li>
+                      <li class="flex items-center"><span class="inline-block w-2 h-2 rounded-full bg-[var(--accent-secondary)] mr-2"></span>1 cup all-purpose flour</li>
+                      <li class="flex items-center"><span class="inline-block w-2 h-2 rounded-full bg-[var(--accent-secondary)] mr-2"></span>2 tbsp sugar</li>
+                      <li class="flex items-center"><span class="inline-block w-2 h-2 rounded-full bg-[var(--accent-secondary)] mr-2"></span>1 lemon, zested</li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="mt-6">
+                  <a href="#" class="view-recipe inline-flex items-center font-medium text-[var(--cta-primary)] hover:text-[var(--cta-hover)] transition-colors" data-recipe-id="lemon-ricotta-pancakes">
+                    View Recipe
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="text-center mt-16">
+            <a href="#" class="gradient-btn text-white font-medium px-8 py-4 rounded-full shadow-lg inline-flex items-center">
+              <span>View All Recipes</span>
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+              </svg>
+            </a>
+          </div>
+        </div>
+      
+        <!-- Cart Icon -->
+        <button id="cart-toggle" class="fixed bottom-6 right-6 p-4  text-white rounded-full shadow-lg  transition-all z-50" aria-label="Open cart" tabindex="0">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="8" cy="21" r="1" />
+            <circle cx="19" cy="21" r="1" />
+            <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12" />
+          </svg>
+        </button>
+      
+        <!-- Cart Sidebar -->
+        <div id="cart-sidebar" class="fixed top-0 right-0 h-full w-80 bg-[var(--bg-secondary)] shadow-xl transform translate-x-full transition-transform duration-300 z-50 hidden">
+          <div class="p-6">
+            <div class="flex justify-between items-center mb-6">
+              <h2 class="text-2xl font-bold text-[var(--text-primary)]">Your Cart</h2>
+              <button id="close-cart" class="p-2 rounded-full bg-[var(--bg-accent)] hover:bg-[var(--cta-primary)] hover:text-white transition-all" aria-label="Close cart" tabindex="0">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M18 6L6 18" />
+                  <path d="M6 6L18 18" />
+                </svg>
+              </button>
+            </div>
+            <div id="cart-items" class="space-y-4 max-h-[60vh] overflow-y-auto"></div>
+            <div class="mt-6">
+              <p class="text-lg font-semibold text-[var(--text-primary)]">Total: <span id="cart-total">$0.00</span></p>
+              <button id="checkout-btn" class="w-full mt-4 gradient-btn text-white font-medium py-3 rounded-full shadow-lg hover:shadow-xl transition-all" aria-label="Proceed to checkout" tabindex="0">
+                Checkout
+              </button>
+            </div>
+          </div>
+        </div>
+      
+        <!-- Recipe Details Modal -->
+        <div id="recipe-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50" role="dialog" aria-modal="true">
+          <div class="bg-[var(--bg-secondary)] max-w-lg w-full rounded-2xl shadow-xl p-6 relative transform scale-95 opacity-0 transition-all duration-300">
+            <button id="close-modal" class="absolute top-4 right-4 p-2 rounded-full bg-[var(--bg-accent)] hover:bg-[var(--cta-primary)] hover:text-white transition-all" aria-label="Close recipe details" tabindex="0">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M18 6L6 18" />
+                <path d="M6 6L18 18" />
+              </svg>
+            </button>
+            <div id="modal-content">
+              <img loading="lazy" id="modal-image" src="" alt="" class="w-full h-48 object-cover rounded-lg mb-4" />
+              <h3 id="modal-title" class="text-2xl font-bold text-[var(--text-primary)] mb-2"></h3>
+              <p id="modal-description" class="text-[var(--text-secondary)] mb-4"></p>
+              <p id="modal-difficulty" class="text-sm text-[var(--text-secondary)] mb-2"></p>
+              <div id="modal-ingredients" class="text-sm text-[var(--text-secondary)]">
+                <h4 class="font-semibold mb-2">Ingredients:</h4>
+                <ul class="space-y-1"></ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+
+
+      <section id="about" class="py-24 relative overflow-hidden">
+        <div class="container mx-auto px-6">
+          <div
+            class="max-w-4xl mx-auto rounded-2xl relative z-10 bg-gradient-to-br from-[var(--bg-secondary)] to-[var(--bg-secondary)] bg-opacity-80 backdrop-blur-sm shadow-[0_8px_30px_rgba(0,0,0,0.06)] border border-[rgba(var(--accent-primary-rgb),0.1)]"
+          >
+            <div class="p-10 h-fit">
+              <div class="text-center mb-12">
+                <div
+                  class="inline-flex text-white items-center justify-center w-16 h-16 rounded-full shadow-lg mb-6 transform transition-transform hover:scale-105"
+                  style="background: var(--gradient-primary)"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="lucide lucide-utensils-icon lucide-utensils"
+                  >
+                    <path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2" />
+                    <path d="M7 2v20" />
+                    <path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7" />
+                  </svg>
+                </div>
+                <h2 class="text-4xl font-bold mb-6 fade-in">
+                  Our Culinary Philosophy
+                </h2>
+                <div
+                  class="w-24 h-1.5 bg-gradient-to-r from-[var(--cta-primary)] to-[var(--accent-primary)] mx-auto rounded-full mb-6 transform transition-all duration-700 hover:w-32"
+                ></div>
+                <p
+                  class="text-[var(--text-secondary)] max-w-2xl mx-auto mb-8 opacity-90"
+                >
+                  We believe cooking is more than following recipes—it's about
+                  creativity, exploration, and bringing joy to the table.
+                </p>
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-1 mb-10">
+                <div
+                  class="fade-in transform transition-all duration-500 hover:translate-y-[-5px]"
+                >
+                  <h3
+                    class="text-2xl font-medium mb-4 text-[var(--text-primary)] flex items-center"
+                  >
+                    <span
+                      class="inline-block p-4 rounded-full bg-[var(--accent-secondary)] text-[var(--accent-primary)] flex items-center justify-center mr-3 shadow-md"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        class="lucide lucide-flame-icon lucide-flame"
+                      >
+                        <path
+                          d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"
+                        />
+                      </svg>
+                    </span>
+                    Crafting Memorable Flavors
+                  </h3>
+                  <p
+                    class="text-[var(--text-secondary)] leading-relaxed mb-4 pl-14"
+                  >
+                    At Artisan Kitchen, we believe that cooking is an art, and
+                    every meal is a masterpiece waiting to be created. Our
+                    passion for culinary excellence drives us to curate recipes
+                    that are not only delicious but also accessible to home
+                    cooks of all skill levels.
+                  </p>
+                  <p class="text-[var(--text-secondary)] leading-relaxed pl-14">
+                    Each recipe is thoughtfully developed, tested, and refined
+                    to ensure that you can recreate restaurant-quality dishes in
+                    your own kitchen with confidence and joy.
+                  </p>
+                </div>
+
+                <div
+                  class="fade-in transform transition-all duration-500 hover:translate-y-[-5px] delay-100"
+                >
+                  <h3
+                    class="text-2xl font-medium mb-4 text-[var(--text-primary)] flex items-center"
+                  >
+                    <span
+                      class="cta-icon inline-block text-[var(--accent-primary)] p-4 rounded-full bg-[var(--accent-secondary)] mr-3 shadow-md"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        class="lucide lucide-heart-handshake-icon lucide-heart-handshake"
+                      >
+                        <path
+                          d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"
+                        />
+                        <path
+                          d="M12 5 9.04 7.96a2.17 2.17 0 0 0 0 3.08c.82.82 2.13.85 3 .07l2.07-1.9a2.82 2.82 0 0 1 3.79 0l2.96 2.66"
+                        />
+                        <path d="m18 15-2-2" />
+                        <path d="m15 18-2-2" />
+                      </svg>
+                    </span>
+                    Our Commitment
+                  </h3>
+                  <ul class="space-y-5 pl-14">
+                    <li class="fade-in delay-150">
+                      <div class="flex items-start group">
+                        <span
+                          class="inline-flex items-center justify-center p-2 rounded-full bg-[var(--accent-secondary)] text-[var(--accent-primary)] transition-colors duration-300 mr-3 mt-1 shadow-sm"
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="h-3.5 w-3.5"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="3"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          >
+                            <path d="M20 6L9 17l-5-5"></path>
+                          </svg>
+                        </span>
+                        <span
+                          class="text-[var(--text-secondary)] group-hover:text-[var(--text-primary)] transition-colors duration-300"
+                        >
+                          Using fresh, high-quality ingredients in all our
+                          recipes
+                        </span>
+                      </div>
+                    </li>
+                    <li class="fade-in delay-200">
+                      <div class="flex items-start group">
+                        <span
+                          class="inline-flex items-center justify-center p-2 rounded-full bg-[var(--accent-secondary)] text-[var(--accent-primary)] transition-colors duration-300 mr-3 mt-1 shadow-sm"
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="h-3.5 w-3.5"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="3"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          >
+                            <path d="M20 6L9 17l-5-5"></path>
+                          </svg>
+                        </span>
+                        <span
+                          class="text-[var(--text-secondary)] group-hover:text-[var(--text-primary)] transition-colors duration-300"
+                        >
+                          Providing clear, easy-to-follow instructions for all
+                          skill levels
+                        </span>
+                      </div>
+                    </li>
+                    <li class="fade-in delay-250">
+                      <div class="flex items-start group">
+                        <span
+                          class="inline-flex items-center justify-center p-2 rounded-full bg-[var(--accent-secondary)] text-[var(--accent-primary)] transition-colors duration-300 mr-3 mt-1 shadow-sm"
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="h-3.5 w-3.5"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="3"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          >
+                            <path d="M20 6L9 17l-5-5"></path>
+                          </svg>
+                        </span>
+                        <span
+                          class="text-[var(--text-secondary)] group-hover:text-[var(--text-primary)] transition-colors duration-300"
+                        >
+                          Exploring both traditional techniques and innovative
+                          approaches
+                        </span>
+                      </div>
+                    </li>
+                    <li class="fade-in delay-300">
+                      <div class="flex items-start group">
+                        <span
+                          class="inline-flex items-center justify-center p-2 rounded-full bg-[var(--accent-secondary)] text-[var(--accent-primary)] transition-colors duration-300 mr-3 mt-1 shadow-sm"
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="h-3.5 w-3.5"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="3"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          >
+                            <path d="M20 6L9 17l-5-5"></path>
+                          </svg>
+                        </span>
+                        <span
+                          class="text-[var(--text-secondary)] group-hover:text-[var(--text-primary)] transition-colors duration-300"
+                        >
+                          Building a community of passionate home chefs and food
+                          enthusiasts
+                        </span>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Replace the problematic SVG Blob with a better decorative element -->
+        <div
+          class="absolute inset-0 opacity-10 overflow-hidden pointer-events-none"
+        >
+          <div
+            class="absolute -top-10 -right-10 w-64 h-64 bg-gradient-to-br from-[var(--accent-primary)] to-transparent rounded-full filter blur-3xl"
+          ></div>
+          <div
+            class="absolute -bottom-10 -left-10 w-64 h-64 bg-gradient-to-tr from-[var(--cta-primary)] to-transparent rounded-full filter blur-3xl"
+          ></div>
+        </div>
+      </section>
+
+      <!-- Replace the large element after Culinary Philosophy with this improved benefits section -->
+      <section
+        class="py-16 bg-gradient-to-b from-[var(--bg-primary)] to-[var(--bg-secondary)]"
+      >
+        <div class="container mx-auto px-6">
+          <div class="text-center mb-14">
+            <h2 class="text-4xl font-bold mb-6 fade-in">
+              Our Culinary Approach
+            </h2>
+            <div
+              class="w-24 h-1.5 bg-gradient-to-r from-[var(--cta-primary)] to-[var(--accent-primary)] mx-auto rounded-full mb-6 transform transition-all duration-700 hover:w-32"
+            ></div>
+
+            <p class="text-[var(--text-secondary)] max-w-2xl mx-auto fade-in">
+              Discover the advantages of cooking with Artisan Kitchen. Our
+              recipes are designed with these core principles in mind.
+            </p>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div
+              class="bg-[var(--bg-secondary)] rounded-2xl shadow-lg overflow-hidden group hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 fade-in"
+            >
+              <div
+                class="h-2 bg-gradient-to-r from-[var(--accent-primary)] to-[var(--cta-primary)]"
+              ></div>
+              <div class="p-8">
+                <div
+                  class="inline-flex items-center text-[var(--accent-primary)] justify-center w-14 h-14 rounded-xl bg-[var(--bg-accent)] mb-6 group-hover:bg-gradient-to-br group-hover:from-[var(--accent-secondary)] group-hover:to-[var(--accent-primary)] transition-all duration-300"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="lucide lucide-clock-icon lucide-clock"
+                  >
+                    <circle cx="12" cy="12" r="10" />
+                    <polyline points="12 6 12 12 16 14" />
+                  </svg>
+                </div>
+                <h3
+                  class="text-xl font-semibold mb-4 text-[var(--text-primary)]"
+                >
+                  Save Time
+                </h3>
+                <p class="text-[var(--text-secondary)]">
+                  Efficient recipes designed for busy schedules without
+                  compromising on flavor or quality. Our time-saving techniques
+                  help you prepare delicious meals even on your busiest days.
+                </p>
+              </div>
+            </div>
+
+            <div
+              class="bg-[var(--bg-secondary)] rounded-2xl shadow-lg overflow-hidden group hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 fade-in delay-100"
+            >
+              <div
+                class="h-2 bg-gradient-to-r from-[var(--cta-primary)] to-[var(--accent-primary)]"
+              ></div>
+              <div class="p-8">
+                <div
+                  class="inline-flex items-center text-[var(--accent-primary)] justify-center w-14 h-14 rounded-xl bg-[var(--bg-accent)] mb-6 group-hover:bg-gradient-to-br group-hover:from-[var(--accent-secondary)] group-hover:to-[var(--accent-primary)] transition-all duration-300"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="lucide lucide-book-open-icon lucide-book-open"
+                  >
+                    <path d="M12 7v14" />
+                    <path
+                      d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"
+                    />
+                  </svg>
+                </div>
+                <h3
+                  class="text-xl font-semibold mb-4 text-[var(--text-primary)]"
+                >
+                  Learn New Skills
+                </h3>
+                <p class="text-[var(--text-secondary)]">
+                  Clear instructions and tips to help you master new cooking
+                  techniques at your own pace. Develop confidence in the kitchen
+                  with our guided approach.
+                </p>
+              </div>
+            </div>
+
+            <div
+              class="bg-[var(--bg-secondary)] rounded-2xl shadow-lg overflow-hidden group hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 fade-in delay-200"
+            >
+              <div
+                class="h-2 bg-gradient-to-r from-[var(--accent-primary)] to-[var(--cta-primary)]"
+              ></div>
+              <div class="p-8">
+                <div
+                  class="inline-flex text-[var(--accent-primary)] items-center justify-center w-14 h-14 rounded-xl bg-[var(--bg-accent)] mb-6 group-hover:bg-gradient-to-br group-hover:from-[var(--accent-secondary)] group-hover:to-[var(--accent-primary)] transition-all duration-300"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="lucide lucide-heart-icon lucide-heart"
+                  >
+                    <path
+                      d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"
+                    />
+                  </svg>
+                </div>
+                <h3
+                  class="text-xl font-semibold mb-4 text-[var(--text-primary)]"
+                >
+                  Eat Healthier
+                </h3>
+                <p class="text-[var(--text-secondary)]">
+                  Balanced recipes that nourish your body while delighting your
+                  taste buds. Discover how healthy eating can be both satisfying
+                  and delicious.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="contact" class="py-24 relative">
+        <div class="container mx-auto px-6">
+          <div class="text-center mb-12">
+            <h2 class="text-4xl font-bold mb-4 fade-in">Get in Touch</h2>
+            <div
+              class="w-24 h-1.5 bg-gradient-to-r from-[var(--cta-primary)] to-[var(--accent-primary)] mx-auto rounded-full mb-6 transform transition-all duration-700 hover:w-32"
+            ></div>
+            <p class="text-[var(--text-secondary)] max-w-2xl mx-auto fade-in">
+              Have a question or suggestion? We'd love to hear from you! Fill
+              out the form and we'll get back to you soon.
+            </p>
+          </div>
+
+          <div
+            class="max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-10 bg-[var(--bg-secondary)] rounded-2xl shadow-xl overflow-hidden border border-[rgba(var(--accent-primary-rgb),0.1)]"
+          >
+            <div class="p-10">
+              <div class="mb-8 flex items-center">
+                <span
+                  class="w-10 h-10 rounded-full bg-[var(--accent-secondary)] text-[var(--accent-primary)] flex items-center justify-center mr-4 shadow-lg"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="lucide lucide-message-circle"
+                  >
+                    <path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z" />
+                  </svg>
+                </span>
+                <h3 class="text-2xl font-semibold text-[var(--text-primary)]">
+                  Send us a message
+                </h3>
+              </div>
+
+              <form class="space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div class="relative">
+                    <label
+                      for="name"
+                      class="absolute text-xs font-medium text-[var(--text-secondary)] px-2 bg-[var(--bg-secondary)] -top-2 left-3"
+                    >
+                      Name
+                    </label>
+                    <input
+                      type="text"
+                      id="name"
+                      class="modern-input w-full pl-4 pt-4 pb-3 bg-[var(--bg-secondary)] border-2 border-[rgba(var(--accent-primary-rgb),0.2)] focus:border-[var(--cta-primary)] focus:border-2 focus:outline-none"
+                      placeholder="Your name"
+                    />
+                  </div>
+                  <div class="relative">
+                    <label
+                      for="email"
+                      class="absolute text-xs font-medium text-[var(--text-secondary)] px-2 bg-[var(--bg-secondary)] -top-2 left-3"
+                    >
+                      Email
+                    </label>
+                    <input
+                      type="email"
+                      id="email"
+                      class="modern-input w-full pl-4 pt-4 pb-3 border-2 bg-[var(--bg-primary)] border-[rgba(var(--accent-primary-rgb),0.2)] focus:border-[var(--cta-primary)] focus:border-2 focus:outline-none"
+                      placeholder="your@email.com"
+                    />
+                  </div>
+                </div>
+
+                <div class="relative">
+                  <label
+                    for="subject"
+                    class="absolute text-xs font-medium text-[var(--text-secondary)] px-2 bg-[var(--bg-secondary)] -top-2 left-3"
+                  >
+                    Subject
+                  </label>
+                  <input
+                    type="text"
+                    id="subject"
+                    class="modern-input w-full pl-4 pt-4 pb-3 border-2 bg-[var(--bg-secondary)] border-[rgba(var(--accent-primary-rgb),0.2)] focus:border-[var(--cta-primary)] focus:border-2 focus:outline-none"
+                    placeholder="What's this about?"
+                  />
+                </div>
+
+                <div class="relative">
+                  <label
+                    for="message"
+                    class="absolute text-xs font-medium text-[var(--text-secondary)] px-2 bg-[var(--bg-secondary)] -top-2 left-3"
+                  >
+                    Message
+                  </label>
+                  <textarea
+                    id="message"
+                    rows="5"
+                    class="modern-input w-full pl-4 pt-4 pb-3 border-2 bg-[var(--bg-secondary)] border-[rgba(var(--accent-primary-rgb),0.2)] focus:border-[var(--cta-primary)] focus:border-2 focus:outline-none"
+                    placeholder="Tell us what you'd like to know..."
+                  ></textarea>
+                </div>
+
+                <div class="flex items-center space-x-2 mb-4">
+                  <input
+                    type="checkbox"
+                    id="newsletter"
+                    class="form-checkbox h-5 w-5 text-[var(--cta-primary)] rounded border-2 border-[rgba(var(--accent-primary-rgb),0.3)]"
+                  />
+                  <label
+                    for="newsletter"
+                    class="text-sm text-[var(--text-secondary)]"
+                    >Subscribe to our newsletter for new recipes</label
+                  >
+                </div>
+
+                <div>
+                  <button
+                    type="submit"
+                    class="gradient-btn text-white font-medium px-8 py-4 rounded-full shadow-lg w-full flex items-center justify-center group"
+                  >
+                    <span>Send Message</span>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      class="ml-2 transform transition-transform group-hover:translate-x-1"
+                    >
+                      <path d="M5 12h14"></path>
+                      <path d="m12 5 7 7-7 7"></path>
+                    </svg>
+                  </button>
+                </div>
+              </form>
+            </div>
+
+            <div class="hidden lg:block relative">
+              <img loading="lazy"
+                src="https://images.unsplash.com/photo-1556911220-bff31c812dba?auto=format&fit=crop&q=80"
+                alt="Contact us"
+                class="absolute inset-0 w-full h-full object-cover"
+              />
+              <div
+                class="absolute inset-0 bg-gradient-to-tr from-[rgba(var(--accent-primary-rgb),0.3)] to-transparent"
+              ></div>
+
+              <!-- Contact info overlay -->
+              <div
+                class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-[rgba(0,0,0,0.7)] to-transparent p-8"
+              >
+                <div class="space-y-4">
+                  <div class="flex items-center text-white">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      class="mr-3"
+                    >
+                      <path
+                        d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"
+                      ></path>
+                    </svg>
+                    <span>(123) 456-7890</span>
+                  </div>
+                  <div class="flex items-center text-white">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      class="mr-3"
+                    >
+                      <path
+                        d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"
+                      ></path>
+                      <polyline points="22,6 12,13 2,6"></polyline>
+                    </svg>
+                    <span>hello@artisankitchen.com</span>
+                  </div>
+                  <div class="flex items-center text-white">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      class="mr-3"
+                    >
+                      <path
+                        d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"
+                      ></path>
+                      <circle cx="12" cy="10" r="3"></circle>
+                    </svg>
+                    <span>123 Culinary Lane, Foodville, FC 12345</span>
+                  </div>
+                </div>
+
+                <div class="mt-6 flex space-x-4">
+                  <a
+                    href="#"
+                    class="w-10 h-10 rounded-full bg-[inherit] bg-opacity-20 border border-white flex items-center justify-center text-white hover:bg-[#0f172a] transition-all"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="18"
+                      height="18"
+                      fill="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        d="M12.315 2c2.43 0 2.784.013 3.808.06 1.064.049 1.791.218 2.427.465a4.902 4.902 0 011.772 1.153 4.902 4.902 0 011.153 1.772c.247.636.416 1.363.465 2.427.048 1.067.06 1.407.06 4.123v.08c0 2.643-.012 2.987-.06 4.043-.049 1.064-.218 1.791-.465 2.427a4.902 4.902 0 01-1.153 1.772 4.902 4.902 0 01-1.772 1.153c-.636.247-1.363.416-2.427.465-1.067.048-1.407.06-4.123.06h-.08c-2.643 0-2.987-.012-4.043-.06-1.064-.049-1.791-.218-2.427-.465a4.902 4.902 0 01-1.772-1.153 4.902 4.902 0 01-1.153-1.772c-.247-.636-.416-1.363-.465-2.427-.047-1.024-.06-1.379-.06-3.808v-.63c0-2.43.013-2.784.06-3.808.049-1.064.218-1.791.465-2.427a4.902 4.902 0 011.153-1.772A4.902 4.902 0 015.45 2.525c.636-.247 1.363-.416 2.427-.465C8.901 2.013 9.256 2 11.685 2h.63zm-.081 1.802h-.468c-2.456 0-2.784.011-3.807.058-.975.045-1.504.207-1.857.344-.467.182-.8.398-1.15.748-.35.35-.566.683-.748 1.15-.137.353-.3.882-.344 1.857-.047 1.023-.058 1.351-.058 3.807v.468c0 2.456.011 2.784.058 3.807.045.975.207 1.504.344 1.857.182.466.399.8.748 1.15.35.35.683.566 1.15.748.353.137.882.3 1.857.344 1.054.048 1.37.058 4.041.058h.08c2.597 0 2.917-.01 3.96-.058.976-.045 1.505-.207 1.858-.344.466-.182.8-.398 1.15-.748.35-.35.566-.683.748-1.15.137-.353.3-.882.344-1.857.048-1.055.058-1.37.058-4.041v-.08c0-2.597-.01-2.917-.058-3.96-.045-.976-.207-1.505-.344-1.858a3.097 3.097 0 00-.748-1.15 3.098 3.098 0 00-1.15-.748c-.353-.137-.882-.3-1.857-.344-1.023-.047-1.351-.058-3.807-.058zM12 6.865a5.135 5.135 0 110 10.27 5.135 5.135 0 010-10.27zm0 1.802a3.333 3.333 0 100 6.666 3.333 3.333 0 000-6.666zm5.338-3.205a1.2 1.2 0 110 2.4 1.2 1.2 0 010-2.4z"
+                      ></path>
+                    </svg>
+                  </a>
+                  <a
+                    href="#"
+                    class="w-10 h-10 rounded-full bg-[inherit] bg-opacity-20 border border-white flex items-center justify-center text-white hover:bg-[#0f172a] transition-all"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="18"
+                      height="18"
+                      fill="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84"
+                      ></path>
+                    </svg>
+                  </a>
+                  <a
+                    href="#"
+                    class="w-10 h-10 rounded-full bg-[inherit] bg-opacity-20 border border-white flex items-center justify-center text-white hover:bg-[#0f172a] transition-all"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="18"
+                      height="18"
+                      fill="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        d="M12.017 0C5.396 0 .029 5.367.029 11.987c0 5.079 3.158 9.417 7.618 11.162-.105-.949-.199-2.403.041-3.439.219-.937 1.406-5.957 1.406-5.957s-.359-.72-.359-1.781c0-1.663.967-2.911 2.168-2.911 1.024 0 1.518.769 1.518 1.688 0 1.029-.653 2.567-.992 3.992-.285 1.193.6 2.165 1.775 2.165 2.128 0 3.768-2.245 3.768-5.487 0-2.861-2.063-4.869-5.008-4.869-3.41 0-5.409 2.562-5.409 5.199 0 1.033.394 2.143.889 2.741.099.12.112.225.085.345-.09.375-.293 1.199-.334 1.363-.053.225-.172.271-.401.165-1.495-.69-2.433-2.878-2.433-4.646 0-3.776 2.748-7.252 7.92-7.252 4.158 0 7.392 2.967 7.392 6.923 0 4.135-2.607 7.462-6.233 7.462-1.214 0-2.354-.629-2.758-1.379l-.749 2.848c-.269 1.045-1.004 2.352-1.498 3.146 1.123.345 2.306.535 3.55.535 6.607 0 11.985-5.365 11.985-11.987C23.97 5.39 18.592.026 11.985.026L12.017 0z"
+                      ></path>
+                    </svg>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+    <footer
+      class="bg-[var(--bg-secondary)] pt-16 pb-10 border-t border-[var(--accent-secondary)]"
+    >
+      <div class="container mx-auto px-6">
+        <div
+          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 mb-16"
+        >
+          <div>
+            <div class="flex items-center space-x-3 mb-6">
+              <div
+                class="bg-gradient-to-br from-[var(--cta-primary)] to-[var(--accent-primary)] p-2 rounded-full shadow-md"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="lucide lucide-chef-hat-icon lucide-chef-hat"
+                >
+                  <path
+                    d="M17 21a1 1 0 0 0 1-1v-5.35c0-.457.316-.844.727-1.041a4 4 0 0 0-2.134-7.589 5 5 0 0 0-9.186 0 4 4 0 0 0-2.134 7.588c.411.198.727.585.727 1.041V20a1 1 0 0 0 1 1Z"
+                  />
+                  <path d="M6 17h12" />
+                </svg>
+              </div>
+              <h3 class="text-xl font-medium text-[var(--text-primary)]">
+                Artisan Kitchen
+              </h3>
+            </div>
+            <p class="text-[var(--text-secondary)] mb-6">
+              Elevating everyday cooking with chef-inspired recipes and
+              techniques.
+            </p>
+            <p class="text-[var(--text-secondary)]">
+              &copy; 2023 Artisan Kitchen. All Rights Reserved.
+            </p>
+          </div>
+
+          <div>
+            <h3 class="text-lg font-semibold mb-6 text-[var(--text-primary)]">
+              Explore
+            </h3>
+            <ul class="space-y-4">
+              <li>
+                <a
+                  href="#recipes"
+                  class="text-[var(--text-secondary)] hover:text-[var(--cta-primary)] transition-colors"
+                  >Popular Recipes</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#"
+                  class="text-[var(--text-secondary)] hover:text-[var(--cta-primary)] transition-colors"
+                  >Seasonal Favorites</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#"
+                  class="text-[var(--text-secondary)] hover:text-[var(--cta-primary)] transition-colors"
+                  >Cooking Techniques</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#"
+                  class="text-[var(--text-secondary)] hover:text-[var(--cta-primary)] transition-colors"
+                  >Kitchen Essentials</a
+                >
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <h3 class="text-lg font-semibold mb-6 text-[var(--text-primary)]">
+              Company
+            </h3>
+            <ul class="space-y-4">
+              <li>
+                <a
+                  href="#about"
+                  class="text-[var(--text-secondary)] hover:text-[var(--cta-primary)] transition-colors"
+                  >About Us</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#"
+                  class="text-[var(--text-secondary)] hover:text-[var(--cta-primary)] transition-colors"
+                  >Our Team</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#"
+                  class="text-[var(--text-secondary)] hover:text-[var(--cta-primary)] transition-colors"
+                  >Careers</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#contact"
+                  class="text-[var(--text-secondary)] hover:text-[var(--cta-primary)] transition-colors"
+                  >Contact Us</a
+                >
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <h3 class="text-lg font-semibold mb-6 text-[var(--text-primary)]">
+              Newsletter
+            </h3>
+            <p class="text-[var(--text-secondary)] mb-4">
+              Subscribe for new recipes and cooking tips.
+            </p>
+            <form class="flex">
+              <input
+                type="email"
+                placeholder="Your email"
+                class="subscribe-email-input px-4 rounded-l-full rounded-r-none bg-[var(--bg-secondary)] flex-grow border-r-0 border-2 border-[rgba(var(--accent-primary-rgb),0.2)] focus:border-[var(--cta-primary)] focus:border-2 focus:outline-none"
+              />
+              <button
+                type="submit"
+                class="gradient-btn text-white px-4 py-2 rounded-r-full rounded-l-none"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="lucide lucide-send-icon lucide-send"
+                >
+                  <path
+                    d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z"
+                  />
+                  <path d="m21.854 2.147-10.94 10.939" />
+                </svg>
+              </button>
+            </form>
+          </div>
+        </div>
+
+        <div class="border-t border-[var(--accent-secondary)] pt-8">
+          <div class="flex flex-col md:flex-row justify-between items-center">
+            <p class="text-sm text-[var(--text-secondary)] mb-4 md:mb-0">
+              Designed with ❤️ for cooking enthusiasts everywhere
+            </p>
+            <div class="flex space-x-6">
+              <a
+                href="#"
+                class="text-[var(--text-secondary)] hover:text-[var(--cta-primary)] transition-colors"
+              >
+                <span class="sr-only">Privacy Policy</span>
+                <span class="text-sm">Privacy Policy</span>
+              </a>
+              <a
+                href="#"
+                class="text-[var(--text-secondary)] hover:text-[var(--cta-primary)] transition-colors"
+              >
+                <span class="sr-only">Terms of Service</span>
+                <span class="text-sm">Terms of Service</span>
+              </a>
+              <a
+                href="#"
+                class="text-[var(--text-secondary)] hover:text-[var(--cta-primary)] transition-colors"
+              >
+                <span class="sr-only">Cookies</span>
+                <span class="text-sm">Cookies</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+
 </body>
 </html>
